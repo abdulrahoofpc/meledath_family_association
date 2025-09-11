@@ -1,0 +1,165 @@
+<li>
+    <div class="member-container">
+        <div class="member-couple">
+            <!-- Main member -->
+            <div class="member-box 
+                        {% if member.gender == 'M' %}male{% elif member.gender == 'F' %}female{% endif %}"
+                 data-member-id="{{ member.id }}" onclick="openModal({{ member.id }}, event)">
+                {% if is_main_member %}
+                    <div class="main-member-icon" title="Main Member">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                {% endif %}
+                <div class="member-photo">
+                    {% if member.photo %}
+                        <img src="{{ member.photo.url }}" alt="{{ member.first_name }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/80?text=No+Photo" alt="No photo">
+                    {% endif %}
+                </div>
+                <div class="member-info">
+                    <div class="member-name">{{ member.first_name }} {{ member.last_name }}</div>
+                    {% if member.membership_category %}
+                        <div class="member-category 
+                                    {% if member.membership_category == 'LM' %}category-lm
+                                    {% elif member.membership_category == 'PM' %}category-pm
+                                    {% elif member.membership_category == 'NM' %}category-nm
+                                    {% endif %}">
+                            {% if member.membership_category == 'LM' %}<i class="fas fa-star"></i> Life Member
+                            {% elif member.membership_category == 'PM' %}<i class="fas fa-check"></i> Paid Member
+                            {% elif member.membership_category == 'NM' %}<i class="fas fa-times"></i> Non Member
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Spouse display -->
+            {% for spouse in member.spouses.all %}
+                {% if spouse.id != member.id %}
+                    <div class="member-box 
+                                {% if spouse.gender == 'M' %}male{% elif spouse.gender == 'F' %}female{% endif %}"
+                         data-member-id="{{ spouse.id }}" onclick="openModal({{ spouse.id }}, event)">
+                        <div class="member-photo">
+                            {% if spouse.photo %}
+                                <img src="{{ spouse.photo.url }}" alt="{{ spouse.first_name }}">
+                            {% else %}
+                                <img src="https://via.placeholder.com/80?text=No+Photo" alt="No photo">
+                            {% endif %}
+                        </div>
+                        <div class="member-info">
+                            <div class="member-name">{{ spouse.first_name }} {{ spouse.last_name }}</div>
+                            {% if spouse.membership_category %}
+                                <div class="member-category 
+                                            {% if spouse.membership_category == 'LM' %}category-lm
+                                            {% elif spouse.membership_category == 'PM' %}category-pm
+                                            {% elif spouse.membership_category == 'NM' %}category-nm
+                                            {% endif %}">
+                                    {% if spouse.membership_category == 'LM' %}<i class="fas fa-star"></i> Life Member
+                                    {% elif spouse.membership_category == 'PM' %}<i class="fas fa-check"></i> Paid Member
+                                    {% elif spouse.membership_category == 'NM' %}<i class="fas fa-times"></i> Non Member
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden popup content for spouse -->
+                    <div style="display:none;" id="popup-{{ spouse.id }}">
+                        <div class="popup-image">
+                            {% if spouse.photo %}
+                                <img src="{{ spouse.photo.url }}" alt="{{ spouse.first_name }}">
+                            {% else %}
+                                <img src="https://via.placeholder.com/250?text=No+Photo" alt="No photo">
+                            {% endif %}
+                        </div>
+                        <div class="popup-details">
+                            <p><strong>Name:</strong> <span>{{ spouse.first_name }} {{ spouse.last_name }}</span></p>
+                            <p><strong>Gender:</strong> <span>{% if spouse.gender == 'M' %}Male{% elif spouse.gender == 'F' %}Female{% else %}N/A{% endif %}</span></p>
+                            <p><strong>Membership:</strong> 
+                                <span>
+                                    {% if spouse.membership_category == 'LM' %}Life Member
+                                    {% elif spouse.membership_category == 'PM' %}Paid Member
+                                    {% elif spouse.membership_category == 'NM' %}Non Member
+                                    {% endif %}
+                                    {% if spouse.membership_number %}({{ spouse.membership_number }}){% endif %}
+                                </span>
+                            </p>
+                            <p><strong>Spouse(s):</strong> 
+                                <span>
+                                    {{ member.first_name }} {{ member.last_name }}
+                                    {% for other_spouse in spouse.spouses.all %}
+                                        {% if other_spouse.id != member.id %}
+                                            , {{ other_spouse.first_name }} {{ other_spouse.last_name }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </span>
+                            </p>
+                            <p><strong>Address:</strong> <span>{{ spouse.address|default:"N/A" }}</span></p>
+                            <p><strong>DOB:</strong> <span>{{ spouse.date_of_birth|date:"F j, Y"|default:"N/A" }}</span></p>
+                            <p><strong>Occupation:</strong> <span>{{ spouse.occupation|default:"N/A" }}</span></p>
+                            <p><strong>Email:</strong> <span>{{ spouse.email|default:"N/A" }}</span></p>
+                            <p><strong>Mobile:</strong> <span>{{ spouse.mobile_number|default:"N/A" }}</span></p>
+                            {% if spouse.family_photo %}
+                                <img class="family-photo" src="{{ spouse.family_photo.url }}" style="display:none;">
+                            {% else %}
+                                <img class="family-photo" src="https://via.placeholder.com/400x300?text=No+Family+Photo" style="display:none;">
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Hidden popup content for main member -->
+        <div style="display:none;" id="popup-{{ member.id }}" {% if is_main_member %}class="main-member-popup"{% endif %}>
+            <div class="popup-image">
+                {% if member.photo %}
+                    <img src="{{ member.photo.url }}" alt="{{ member.first_name }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/250?text=No+Photo" alt="No photo">
+                {% endif %}
+            </div>
+            <div class="popup-details">
+                <p><strong>Name:</strong> <span>{{ member.first_name }} {{ member.last_name }}</span></p>
+                <p><strong>Gender:</strong> <span>{% if member.gender == 'M' %}Male{% elif member.gender == 'F' %}Female{% else %}N/A{% endif %}</span></p>
+                <p><strong>Membership:</strong> 
+                    <span>
+                        {% if member.membership_category == 'LM' %}Life Member
+                        {% elif member.membership_category == 'PM' %}Paid Member
+                        {% elif member.membership_category == 'NM' %}Non Member
+                        {% endif %}
+                        {% if member.membership_number %}({{ member.membership_number }}){% endif %}
+                    </span>
+                </p>
+                {% if member.spouses.all %}
+                    <p><strong>Spouse(s):</strong> 
+                        <span>
+                            {% for spouse in member.spouses.all %}
+                                {{ spouse.first_name }} {{ spouse.last_name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </span>
+                    </p>
+                {% endif %}
+                <p><strong>Address:</strong> <span>{{ member.address|default:"N/A" }}</span></p>
+                <p><strong>DOB:</strong> <span>{{ member.date_of_birth|date:"F j, Y"|default:"N/A" }}</span></p>
+                <p><strong>Occupation:</strong> <span>{{ member.occupation|default:"N/A" }}</span></p>
+                <p><strong>Email:</strong> <span>{{ member.email|default:"N/A" }}</span></p>
+                <p><strong>Mobile:</strong> <span>{{ member.mobile_number|default:"N/A" }}</span></p>
+                {% if member.family_photo %}
+                    <img class="family-photo" src="{{ member.family_photo.url }}" style="display:none;">
+                {% else %}
+                    <img class="family-photo" src="https://via.placeholder.com/400x300?text=No+Family+Photo" style="display:none;">
+                {% endif %}
+            </div>
+        </div>
+
+        {% if member.get_children %}
+            <ul class="children-list">
+                {% for child in member.get_children %}
+                    {% include 'family5memb.html' with member=child %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</li>

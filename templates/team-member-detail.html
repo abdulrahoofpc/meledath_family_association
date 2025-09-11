@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ member.name }} - Team Member</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        .page-header {
+            background: linear-gradient(135deg, #00B4DB, #0083B0);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .page-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            font-size: 16px;
+        }
+        
+        .breadcrumb li {
+            margin: 0 10px;
+        }
+        
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .breadcrumb a:hover {
+            color: white;
+        }
+        
+        .breadcrumb .separator {
+            margin: 0 5px;
+        }
+        
+        /* Member Details Section */
+        .member-section {
+            padding: 80px 0;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        .member-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+        
+        .member-image {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .member-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 5px solid white;
+        }
+        
+        .member-image img:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .member-info {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .member-name {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .member-name:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(135deg, #00B4DB, #0083B0);
+        }
+        
+        .member-position {
+            font-size: 20px;
+            color: #00B4DB;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .member-bio {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        /* Social Links */
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00B4DB, #0083B0);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+            {% comment %} box-shadow: 0 5px 15px rgba(110, 72, 170, 0.4); {% endcomment %}
+        }
+        
+        /* Footer */
+        .footer {
+             background: linear-gradient(135deg, #00B4DB, #0083B0);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 32px;
+            }
+            
+            .member-name {
+                font-size: 28px;
+            }
+            
+            .breadcrumb {
+                flex-wrap: wrap;
+            }
+            
+            .breadcrumb li {
+                margin: 5px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">{{ member.name }}</h1>
+            <ul class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="separator"><i class="fas fa-chevron-right"></i></li>
+                <li><a href="{% url 'team' %}">Our Team</a></li>
+                <li class="separator"><i class="fas fa-chevron-right"></i></li>
+                <li>{{ member.name }}</li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="member-section">
+        <div class="container">
+            <div class="member-container">
+                <div class="member-image">
+                    <img src="{{ member.image.url }}" class="img-fluid rounded" alt="{{ member.name }}">
+                </div>
+                <div class="member-info">
+                    <h2 class="member-name">{{ member.name }}</h2>
+                    <p class="member-position"><strong>Position:</strong> {{ member.position }}</p>
+                    <p class="member-bio">{{ member.bio }}</p>
+
+                    <div class="social-links">
+                        {% if member.facebook %}
+                            <a href="{{ member.facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        {% endif %}
+                        {% if member.twitter %}
+                            <a href="{{ member.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                        {% endif %}
+                        {% if member.linkedin %}
+                            <a href="{{ member.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        {% endif %}
+                        {% if member.instagram %}
+                            <a href="{{ member.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                        {% endif %}
+                        {% if member.github %}
+                            <a href="{{ member.github }}" target="_blank"><i class="fab fa-github"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {% now "Y" %} Meledath Family.</p>
+        </div>
+    </footer>
+</body>
+</html>

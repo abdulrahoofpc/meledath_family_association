@@ -1,0 +1,243 @@
+<style>
+  .chat-icon {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #ffffff;
+    color: #333;
+    font-size: 24px;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: all 0.3s ease;
+  }
+
+  .chat-icon:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .discussion-container {
+    display: none;
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 90%;
+    max-width: 380px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    z-index: 999;
+    border: 1px solid #f0f0f0;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .discussion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .discussion-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #888;
+  }
+
+  .comment-list {
+    max-height: 240px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    scrollbar-width: thin;
+  }
+
+  .comment-item {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    word-wrap: break-word;
+    border-left: 3px solid #e0e0e0;
+  }
+
+  .comment-item strong {
+    color: #333;
+  }
+
+  .comment-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    resize: none;
+    min-height: 60px;
+    font-size: 0.95rem;
+    background: #f9f9f9;
+  }
+
+  .comment-form button {
+    margin-top: 10px;
+    background-color: #4a4a4a;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    align-self: flex-end;
+    transition: background-color 0.2s;
+  }
+
+  .comment-form button:hover {
+    background-color: #333;
+  }
+
+  .no-topics-message {
+    background-color: #e7f3fe;
+    color: #31708f;
+    padding: 15px;
+    border: 1px solid #bce8f1;
+    border-radius: 4px;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  @media screen and (max-width: 500px) {
+    .discussion-container {
+      width: 95%;
+      right: 10px;
+      bottom: 80px;
+      padding: 15px;
+    }
+
+    .chat-icon {
+      width: 55px;
+      height: 55px;
+      font-size: 24px;
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .comment-form button {
+      width: 100%;
+      align-self: stretch;
+    }
+  }
+</style>
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- Floating Chat Icon -->
+<button class="chat-icon" onclick="toggleDiscussion()"><i class="fa-solid fa-message" style="color:#fff;"></i></button>
+
+<!-- Family Discussion Box -->
+<div class="discussion-container" id="discussionBox" style="display:none;">
+  <div class="discussion-header">
+    <h3>Family Discussion</h3>
+    <button class="close-btn" onclick="toggleDiscussion()">×</button>
+  </div>
+
+  <div class="comment-list" id="commentList">
+    {% if topic %}
+      <div class="comment-item"><strong>Topic:</strong> {{ topic.title }}</div>
+      {% for comment in comments %}
+        <div class="comment-item">
+          <strong>{{ comment.user.username }}</strong> ({{ comment.posted_at|date:"M d, Y" }}):<br>
+          {{ comment.content }}
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="no-topics-message">
+        No further topics at the moment. <br> Please stand by.
+      </div>
+    {% endif %}
+  </div>
+
+  {% if request.user.is_authenticated %}
+  <div class="comment-form">
+    <textarea id="commentInput" placeholder="Write your message..."></textarea>
+    <button onclick="addComment()">Post</button>
+  </div>
+  {% else %}
+  <div style="text-align: center; font-size: 0.9rem; color: #666;">
+    Please <a href="/login/" style="color: #4a4a4a; font-weight: 500;">login</a> to post comments.
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function toggleDiscussion(show = null) {
+  const box = document.getElementById('discussionBox');
+  if (show === true) {
+    box.style.display = 'block';
+  } else if (show === false) {
+    box.style.display = 'none';
+  } else {
+    box.style.display = (box.style.display === 'none') ? 'block' : 'none';
+  }
+}
+
+function addComment() {
+  const content = document.getElementById('commentInput').value;
+  if (!content.trim()) return;
+
+  fetch("{% url 'post_comment' %}", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-CSRFToken': '{{ csrf_token }}'
+    },
+    body: new URLSearchParams({ content })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      const list = document.getElementById('commentList');
+      list.innerHTML = `
+        <div class="comment-item"><strong>Topic:</strong> {{ topic.title }}</div>
+        <div class="comment-item">
+          <strong>${data.username}</strong> (${data.timestamp}):<br>${data.content}
+        </div>
+      `;
+      document.getElementById('commentInput').value = '';
+      toggleDiscussion(false);  // Close the popup after posting
+    } else {
+      alert(data.error || 'Error posting comment');
+    }
+  });
+}
+</script>

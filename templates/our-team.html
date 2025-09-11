@@ -1,0 +1,380 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+{% include 'head.html' %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<body>
+<div class="page-wrapper">
+    {% include 'navbar.html' %}
+
+    <!-- Title Bar -->
+
+    <div class="pbmit-title-bar-wrapper" style="margin: 0px 10px 0;">
+			<div class="container">
+				<div class="pbmit-title-bar-content">
+					<div class="pbmit-title-bar-content-inner">
+						<div class="pbmit-tbar">
+							<div class="pbmit-tbar-inner container">
+								<h1 class="pbmit-tbar-title"> Office Bearers</h1>
+							</div>
+						</div>
+						<div class="pbmit-breadcrumb">
+							<div class="pbmit-breadcrumb-inner">
+								<span><a title="" href="#" class="home"><span>Meledath Family</span></a></span>
+								<span class="sep">
+									<i class="pbmit-base-icon-angle-right"></i>
+								</span>
+								<span><span class="post-root post post-post current-item"> Office Bearers</span></span>
+							</div>
+						</div>
+					</div>
+				</div> 
+			</div> 
+		</div>
+         <!-- Title Bar end -->
+    <!-- Compact Filter Design -->
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="compact-filter-card p-3 rounded-3">
+                    <div class="text-center mb-3">
+                        <h5 class="fw-bold text-white mb-1">View Committee Members</h5>
+                        <p class="text-light opacity-75 mb-0">Select a year to discover our team</p>
+                    </div>
+                    
+                    <div class="filter-content">
+                        <div class="input-wrapper mb-3">
+                            <select id="yearFilter" class="compact-select" style="appearance: none;">
+                                <option value="" selected disabled>Choose a Year</option>
+                                {% for year, members in general_by_year.items %}
+                                    <option value="{{ year }}">{{ year }}</option>
+                                {% endfor %}
+                                {% for year, members in women_by_year.items %}
+                                    {% if year not in general_by_year %}
+                                        <option value="{{ year }}">{{ year }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            <div class="select-arrow">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Association Pills -->
+                        <div class="association-pills text-center" id="associationTabs" style="display: none;">
+                            <div class="d-flex justify-content-center flex-wrap gap-2">
+                                <input type="radio" class="btn-check" name="association" id="associationAll" autocomplete="off" checked>
+                                <label class="association-pill" for="associationAll">
+                                    <i class="fas fa-layer-group me-1"></i>All
+                                </label>
+                                
+                                <input type="radio" class="btn-check" name="association" id="associationGeneral" autocomplete="off">
+                                <label class="association-pill" for="associationGeneral">
+                                    <i class="fas fa-users me-1"></i>General
+                                </label>
+                                
+                                <input type="radio" class="btn-check" name="association" id="associationWomen" autocomplete="off">
+                                <label class="association-pill" for="associationWomen">
+                                    <i class="fas fa-venus me-1"></i>Women
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- General Members Section -->
+    <div id="generalSections">
+        {% for year, members in general_by_year.items %}
+        <section class="team-section py-4 filter-section general-section" data-year="{{ year }}" style="background: #f1ede4; display: none;">
+            <div class="container">
+                <div class="row mb-4 text-center">
+                    <div class="col-12">
+                        <h3 class="fw-bold mb-1 text-dark">Meledath Family Association</h3>
+                        <h6 class="text-secondary">Executive Committee {{ year }}</h6>
+                        <div class="divider mx-auto"></div>
+                    </div>
+                </div>
+                <div class="row g-3 justify-content-center">
+                    {% for member in members %}
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                        <div class="team-card h-100 shadow-sm">
+                            <div class="team-img-wrapper">
+                                <img src="{{ member.image.url }}" class="img-fluid w-100 team-img" alt="{{ member.name }}">
+                                <a href="{% url 'team_detail' member.slug %}" class="stretched-link"></a>
+                            </div>
+                            <div class="p-2 text-center bg-white">
+                                <h6 class="fw-bold mb-0">{{ member.name }}</h6>
+                                <small class="text-muted d-block">{{ member.position }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endfor %}
+    </div>
+
+    <!-- Women Members Section -->
+    <div id="womenSections">
+        {% for year, members in women_by_year.items %}
+        <section class="team-section py-4 filter-section women-section" data-year="{{ year }}" style="display: none;">
+            <div class="container">
+                <div class="row mb-4 text-center">
+                    <div class="col-12">
+                        <h3 class="fw-bold mb-1 text-dark">Women Family Association</h3>
+                        <h6 class="text-secondary">Executive Committee {{ year }}</h6>
+                        <div class="divider mx-auto"></div>
+                    </div>
+                </div>
+                <div class="row g-3 justify-content-center">
+                    {% for member in members %}
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                        <div class="team-card h-100 shadow-sm">
+                            <div class="team-img-wrapper">
+                                <img src="{{ member.image.url }}" class="img-fluid w-100 team-img" alt="{{ member.name }}">
+                                <a href="{% url 'team_detail' member.slug %}" class="stretched-link"></a>
+                            </div>
+                            <div class="p-2 text-center bg-white">
+                                <h6 class="fw-bold mb-0">{{ member.name }}</h6>
+                                <small class="text-muted d-block">{{ member.position }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endfor %}
+    </div>
+
+    <!-- No Selection Message -->
+    <div id="noSelection" class="container text-center py-3 my-2">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="py-5">
+                    <i class="fas fa-calendar-alt fa-4x text-light mb-4" style="color:#666666 !important;"></i>
+                    <h3 class="text-muted">Select a year to view committee members</h3>
+                    <p class="text-muted">Choose a year from the dropdown to see the executive committees</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom CSS -->
+    <style>
+        .divider {
+            width: 60px;
+            height: 2px;
+            margin: 10px auto;
+            background: #2699D2;
+        }
+        .team-card {
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eee;
+            background: #fff;
+        }
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        .team-img {
+            height: 120px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .team-card:hover .team-img {
+            transform: scale(1.05);
+        }
+        
+        /* Compact Filter Design */
+        .compact-filter-card {
+            background: #2699D2;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Compact Select */
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .compact-select {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .compact-select:focus {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+        }
+        
+        .compact-select option {
+            background: #2699D2;
+            color: white;
+        }
+        
+        .select-arrow {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: white;
+        }
+        
+        /* Association Pills */
+        .association-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .association-pill:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .btn-check:checked + .association-pill {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Animation */
+        .compact-filter-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(10px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .compact-filter-card {
+                padding: 1rem !important;
+            }
+            
+            .compact-select {
+                font-size: 0.9rem;
+                padding: 10px 14px;
+            }
+            
+            .association-pill {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+
+    <!-- JS for Filtering -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearFilter = document.getElementById('yearFilter');
+            const associationTabs = document.getElementById('associationTabs');
+            const noSelection = document.getElementById('noSelection');
+            const generalSections = document.querySelectorAll('.general-section');
+            const womenSections = document.querySelectorAll('.women-section');
+            
+            // Show association tabs when a year is selected
+            yearFilter.addEventListener('change', function() {
+                const selectedYear = this.value;
+                
+                if (selectedYear) {
+                    associationTabs.style.display = 'block';
+                    setTimeout(() => {
+                        associationTabs.style.opacity = '1';
+                    }, 10);
+                    noSelection.style.display = 'none';
+                    filterSections();
+                } else {
+                    associationTabs.style.opacity = '0';
+                    setTimeout(() => {
+                        associationTabs.style.display = 'none';
+                    }, 300);
+                    noSelection.style.display = 'block';
+                    hideAllSections();
+                }
+            });
+            
+            // Add event listeners to association radio buttons
+            document.querySelectorAll('input[name="association"]').forEach(radio => {
+                radio.addEventListener('change', filterSections);
+            });
+            
+            function filterSections() {
+                const selectedYear = yearFilter.value;
+                const associationType = document.querySelector('input[name="association"]:checked').id;
+                
+                // Hide all sections first
+                hideAllSections();
+                
+                if (selectedYear) {
+                    // Show sections based on selection
+                    if (associationType === 'associationAll') {
+                        document.querySelectorAll(`.general-section[data-year="${selectedYear}"]`).forEach(section => {
+                            section.style.display = 'block';
+                        });
+                        document.querySelectorAll(`.women-section[data-year="${selectedYear}"]`).forEach(section => {
+                            section.style.display = 'block';
+                        });
+                    } else if (associationType === 'associationGeneral') {
+                        document.querySelectorAll(`.general-section[data-year="${selectedYear}"]`).forEach(section => {
+                            section.style.display = 'block';
+                        });
+                    } else if (associationType === 'associationWomen') {
+                        document.querySelectorAll(`.women-section[data-year="${selectedYear}"]`).forEach(section => {
+                            section.style.display = 'block';
+                        });
+                    }
+                }
+            }
+            
+            function hideAllSections() {
+                generalSections.forEach(section => {
+                    section.style.display = 'none';
+                });
+                womenSections.forEach(section => {
+                    section.style.display = 'none';
+                });
+            }
+            
+            // Initially hide all sections and show no selection message
+            hideAllSections();
+            noSelection.style.display = 'block';
+            associationTabs.style.display = 'none';
+            associationTabs.style.opacity = '0';
+        });
+    </script>
+
+    {% include 'footer.html' %}
+</div>
+</body>
+</html>
