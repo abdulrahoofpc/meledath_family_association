@@ -34,9 +34,9 @@
                 </div>
             </div>
 
-            <!-- Spouse display -->
+            <!-- Spouse display - Only show if member.id < spouse.id to prevent duplication -->
             {% for spouse in member.spouses.all %}
-                {% if spouse.id != member.id %}
+                {% if spouse.id != member.id and member.id < spouse.id %}
                     <div class="member-box 
                                 {% if spouse.gender == 'M' %}male{% elif spouse.gender == 'F' %}female{% endif %}"
                          data-member-id="{{ spouse.id }}" onclick="openModal({{ spouse.id }}, event)">
@@ -157,7 +157,7 @@
         {% if member.get_children %}
             <ul class="children-list">
                 {% for child in member.get_children %}
-                    {% include 'family2memb.html' with member=child %}
+                    {% include 'family1memb.html' with member=child %}
                 {% endfor %}
             </ul>
         {% endif %}

@@ -26,11 +26,42 @@ SECRET_KEY = 'django-insecure-c8p9(+%m2ci+m87&5p-zj_^c&-5+@bg9%ydn5$j8&$(8qik1_4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['134.209.148.107', 'meledathfamily.com', 'www.meledathfamily.com', 'localhost']
+
+#ALLOWED_HOSTS = []
 # ALLOWED_HOSTS = ['meledathfamily.onrender.com']
 
 # Ensure login required decorators redirect to login page
 LOGIN_URL = '/admin/login/'
+
+
+
+
+
+
+
+
+# from pathlib import Path
+# import os
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+# SECRET_KEY = 'django-insecure-c8p9(+%m2ci+m87&5p-zj_^c&-5+@bg9%ydn5$j8&$(8qik1_4'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
+
+# ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['meledathfamily.onrender.com']
+
+# Ensure login required decorators redirect to login page
+# LOGIN_URL = '/admin/login/'
 
 # Application definition
 
@@ -83,12 +114,31 @@ WSGI_APPLICATION = 'meledathfamilyproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# Database
+# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'meledathdatabase',
+        'USER': 'myprojectuser',
+        'PASSWORD': 'password@123',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
+
+
+# Password validation
+# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+
 
 
 # Password validation
@@ -125,15 +175,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 # MEDIA FILES
-MEDIA_URL ="media/"
-MEDIA_ROOT =os.path.join(BASE_DIR,"media/")
+# MEDIA_URL ="media/"
+# MEDIA_ROOT =os.path.join(BASE_DIR,"media/")
 
-STATICFILES_DIRS=[
-    BASE_DIR/ "static"
-]
+# STATICFILES_DIRS=[
+#     BASE_DIR/ "static"
 
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.2/howto/static-files/
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
