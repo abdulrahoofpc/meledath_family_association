@@ -1,44 +1,42 @@
 {% load static %}
-
 <!doctype html>
 <html lang="en">
 {% include 'head.html' %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <body>
 <div class="page-wrapper">
     {% include 'navbar.html' %}
 
     <!-- Title Bar -->
-
     <div class="pbmit-title-bar-wrapper" style="margin: 0px 10px 0;">
-			<div class="container">
-				<div class="pbmit-title-bar-content">
-					<div class="pbmit-title-bar-content-inner">
-						<div class="pbmit-tbar">
-							<div class="pbmit-tbar-inner container">
-								<h1 class="pbmit-tbar-title"> Office Bearers</h1>
-							</div>
-						</div>
-						<div class="pbmit-breadcrumb">
-							<div class="pbmit-breadcrumb-inner">
-								<span><a title="" href="#" class="home"><span>Meledath Family</span></a></span>
-								<span class="sep">
-									<i class="pbmit-base-icon-angle-right"></i>
-								</span>
-								<span><span class="post-root post post-post current-item"> Office Bearers</span></span>
-							</div>
-						</div>
-					</div>
-				</div> 
-			</div> 
-		</div>
-         <!-- Title Bar end -->
+        <div class="container">
+            <div class="pbmit-title-bar-content">
+                <div class="pbmit-title-bar-content-inner">
+                    <div class="pbmit-tbar">
+                        <div class="pbmit-tbar-inner container">
+                            <h1 class="pbmit-tbar-title">Office Bearers</h1>
+                        </div>
+                    </div>
+                    <div class="pbmit-breadcrumb">
+                        <div class="pbmit-breadcrumb-inner">
+                            <span><a title="" href="/" class="home"><span>Meledath Family</span></a></span>
+                            <span class="sep"><i class="pbmit-base-icon-angle-right"></i></span>
+                            <span><span class="post-root post post-post current-item">Office Bearers</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div> 
+    </div>
+    <!-- Title Bar end -->
+
     <!-- Compact Filter Design -->
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-lg-6 col-md-8">
-                <div class="compact-filter-card p-3 rounded-3">
+                <div class="compact-filter-card p-4 rounded-3">
                     <div class="text-center mb-3">
                         <h5 class="fw-bold text-white mb-1">View Committee Members</h5>
                         <p class="text-light opacity-75 mb-0">Select a year to discover our team</p>
@@ -46,7 +44,7 @@
                     
                     <div class="filter-content">
                         <div class="input-wrapper mb-3">
-                            <select id="yearFilter" class="compact-select" style="appearance: none;">
+                            <select id="yearFilter" class="compact-select">
                                 <option value="" selected disabled>Choose a Year</option>
                                 {% for year, members in general_by_year.items %}
                                     <option value="{{ year }}">{{ year }}</option>
@@ -90,7 +88,7 @@
     <!-- General Members Section -->
     <div id="generalSections">
         {% for year, members in general_by_year.items %}
-        <section class="team-section py-4 filter-section general-section" data-year="{{ year }}" style="background: #f1ede4; display: none;">
+        <section class="team-section py-4 general-section" data-year="{{ year }}" style="display: none;">
             <div class="container">
                 <div class="row mb-4 text-center">
                     <div class="col-12">
@@ -99,22 +97,33 @@
                         <div class="divider mx-auto"></div>
                     </div>
                 </div>
+                {% if members %}
                 <div class="row g-3 justify-content-center">
                     {% for member in members %}
                     <div class="col-6 col-sm-4 col-md-3 col-lg-2">
                         <div class="team-card h-100 shadow-sm">
-                            <div class="team-img-wrapper">
-                                <img src="{{ member.image.url }}" class="img-fluid w-100 team-img" alt="{{ member.name }}">
+                            <div class="team-img-wrapper position-relative">
+                                {% if member.image %}
+                                <img src="{{ member.image.url }}" class="img-fluid w-100 team-img" alt="{{ member.name }}"
+                                     onerror="this.src='{% static 'images/default-avatar.jpg' %}'">
+                                {% else %}
+                                <img src="{% static 'images/default-avatar.jpg' %}" class="img-fluid w-100 team-img" alt="{{ member.name }}">
+                                {% endif %}
                                 <a href="{% url 'team_detail' member.slug %}" class="stretched-link"></a>
                             </div>
                             <div class="p-2 text-center bg-white">
-                                <h6 class="fw-bold mb-0">{{ member.name }}</h6>
+                                <h6 class="fw-bold mb-0 text-dark">{{ member.name }}</h6>
                                 <small class="text-muted d-block">{{ member.position }}</small>
                             </div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted">No general committee members found for {{ year }}</p>
+                </div>
+                {% endif %}
             </div>
         </section>
         {% endfor %}
@@ -123,7 +132,7 @@
     <!-- Women Members Section -->
     <div id="womenSections">
         {% for year, members in women_by_year.items %}
-        <section class="team-section py-4 filter-section women-section" data-year="{{ year }}" style="display: none;">
+        <section class="team-section py-4 women-section" data-year="{{ year }}" style="display: none;">
             <div class="container">
                 <div class="row mb-4 text-center">
                     <div class="col-12">
@@ -132,100 +141,117 @@
                         <div class="divider mx-auto"></div>
                     </div>
                 </div>
+                {% if members %}
                 <div class="row g-3 justify-content-center">
                     {% for member in members %}
                     <div class="col-6 col-sm-4 col-md-3 col-lg-2">
                         <div class="team-card h-100 shadow-sm">
-                            <div class="team-img-wrapper">
-                                <img src="{{ member.image.url }}" class="img-fluid w-100 team-img" alt="{{ member.name }}">
+                            <div class="team-img-wrapper position-relative">
+                                {% if member.image %}
+                                <img src="{{ member.image.url }}" class="img-fluid w-100 team-img" alt="{{ member.name }}"
+                                     onerror="this.src='{% static 'images/default-avatar.jpg' %}'">
+                                {% else %}
+                                <img src="{% static 'images/default-avatar.jpg' %}" class="img-fluid w-100 team-img" alt="{{ member.name }}">
+                                {% endif %}
                                 <a href="{% url 'team_detail' member.slug %}" class="stretched-link"></a>
                             </div>
                             <div class="p-2 text-center bg-white">
-                                <h6 class="fw-bold mb-0">{{ member.name }}</h6>
+                                <h6 class="fw-bold mb-0 text-dark">{{ member.name }}</h6>
                                 <small class="text-muted d-block">{{ member.position }}</small>
                             </div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted">No women's committee members found for {{ year }}</p>
+                </div>
+                {% endif %}
             </div>
         </section>
         {% endfor %}
     </div>
 
     <!-- No Selection Message -->
-    <div id="noSelection" class="container text-center py-3 my-2">
+    <div id="noSelection" class="container text-center py-5 my-2">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="py-5">
-                    <i class="fas fa-calendar-alt fa-4x text-light mb-4" style="color:#666666 !important;"></i>
-                    <h3 class="text-muted">Select a year to view committee members</h3>
-                    <p class="text-muted">Choose a year from the dropdown to see the executive committees</p>
-                </div>
+                <i class="fas fa-calendar-alt fa-4x text-muted mb-4"></i>
+                <h3 class="text-muted">Select a year to view committee members</h3>
+                <p class="text-muted">Choose a year from the dropdown to see the executive committees</p>
             </div>
         </div>
     </div>
 
-    <!-- Custom CSS -->
+    <!-- No Data Message (hidden by default) -->
+    <div id="noDataMessage" class="container text-center py-5" style="display: none;">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <i class="fas fa-users fa-4x text-muted mb-4"></i>
+                <h3 class="text-muted">No committee members found</h3>
+                <p class="text-muted">No committee members available for the selected year and association type.</p>
+            </div>
+        </div>
+    </div>
+
     <style>
         .divider {
             width: 60px;
-            height: 2px;
-            margin: 10px auto;
+            height: 3px;
             background: #2699D2;
+            margin: 15px auto;
         }
+        
         .team-card {
             border-radius: 10px;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid #eee;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
             background: #fff;
         }
+        
         .team-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
+        
         .team-img {
-            height: 120px;
+            height: 150px;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            transition: transform 0.3s ease;
         }
+        
         .team-card:hover .team-img {
             transform: scale(1.05);
         }
         
-        /* Compact Filter Design */
         .compact-filter-card {
-            background: #2699D2;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #2699D2, #1a6a96);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
         
-        /* Compact Select */
         .input-wrapper {
             position: relative;
         }
         
         .compact-select {
             width: 100%;
-            padding: 12px 16px;
-            font-size: 0.95rem;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            color: white;
+            padding: 12px 45px 12px 16px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            color: #333;
             outline: none;
             transition: all 0.3s ease;
+            appearance: none;
         }
         
         .compact-select:focus {
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
-        }
-        
-        .compact-select option {
-            background: #2699D2;
-            color: white;
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
         }
         
         .select-arrow {
@@ -234,97 +260,85 @@
             top: 50%;
             transform: translateY(-50%);
             pointer-events: none;
-            color: white;
+            color: #2699D2;
+            font-size: 14px;
         }
         
-        /* Association Pills */
         .association-pill {
             display: inline-flex;
             align-items: center;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            color: white;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid transparent;
+            border-radius: 25px;
+            color: #2699D2;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.9rem;
+            font-weight: 500;
         }
         
         .association-pill:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
         }
         
         .btn-check:checked + .association-pill {
-            background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+            background: #fff;
+            border-color: #2699D2;
+            color: #2699D2;
+            box-shadow: 0 4px 15px rgba(38, 153, 210, 0.3);
         }
         
-        /* Animation */
-        .compact-filter-card {
-            animation: fadeInUp 0.6s ease-out;
+        .team-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin: 20px 0;
         }
         
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0; 
-                transform: translateY(10px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
-        }
-        
-        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .compact-filter-card {
-                padding: 1rem !important;
-            }
-            
-            .compact-select {
-                font-size: 0.9rem;
-                padding: 10px 14px;
+            .team-img {
+                height: 120px;
             }
             
             .association-pill {
-                padding: 6px 12px;
-                font-size: 0.85rem;
+                padding: 8px 16px;
+                font-size: 0.9rem;
             }
         }
     </style>
 
-    <!-- JS for Filtering -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const yearFilter = document.getElementById('yearFilter');
             const associationTabs = document.getElementById('associationTabs');
             const noSelection = document.getElementById('noSelection');
+            const noDataMessage = document.getElementById('noDataMessage');
             const generalSections = document.querySelectorAll('.general-section');
             const womenSections = document.querySelectorAll('.women-section');
             
-            // Show association tabs when a year is selected
+            // Initialize - hide all sections
+            hideAllSections();
+            noSelection.style.display = 'block';
+            noDataMessage.style.display = 'none';
+            associationTabs.style.display = 'none';
+
             yearFilter.addEventListener('change', function() {
                 const selectedYear = this.value;
                 
                 if (selectedYear) {
                     associationTabs.style.display = 'block';
-                    setTimeout(() => {
-                        associationTabs.style.opacity = '1';
-                    }, 10);
                     noSelection.style.display = 'none';
+                    noDataMessage.style.display = 'none';
                     filterSections();
                 } else {
-                    associationTabs.style.opacity = '0';
-                    setTimeout(() => {
-                        associationTabs.style.display = 'none';
-                    }, 300);
+                    associationTabs.style.display = 'none';
                     noSelection.style.display = 'block';
+                    noDataMessage.style.display = 'none';
                     hideAllSections();
                 }
             });
             
-            // Add event listeners to association radio buttons
             document.querySelectorAll('input[name="association"]').forEach(radio => {
                 radio.addEventListener('change', filterSections);
             });
@@ -333,26 +347,31 @@
                 const selectedYear = yearFilter.value;
                 const associationType = document.querySelector('input[name="association"]:checked').id;
                 
-                // Hide all sections first
                 hideAllSections();
+                noDataMessage.style.display = 'none';
                 
                 if (selectedYear) {
-                    // Show sections based on selection
-                    if (associationType === 'associationAll') {
-                        document.querySelectorAll(`.general-section[data-year="${selectedYear}"]`).forEach(section => {
-                            section.style.display = 'block';
-                        });
-                        document.querySelectorAll(`.women-section[data-year="${selectedYear}"]`).forEach(section => {
-                            section.style.display = 'block';
-                        });
-                    } else if (associationType === 'associationGeneral') {
-                        document.querySelectorAll(`.general-section[data-year="${selectedYear}"]`).forEach(section => {
-                            section.style.display = 'block';
-                        });
-                    } else if (associationType === 'associationWomen') {
-                        document.querySelectorAll(`.women-section[data-year="${selectedYear}"]`).forEach(section => {
-                            section.style.display = 'block';
-                        });
+                    let visibleSections = 0;
+                    
+                    if (associationType === 'associationAll' || associationType === 'associationGeneral') {
+                        const generalSection = document.querySelector(`.general-section[data-year="${selectedYear}"]`);
+                        if (generalSection) {
+                            generalSection.style.display = 'block';
+                            visibleSections++;
+                        }
+                    }
+                    
+                    if (associationType === 'associationAll' || associationType === 'associationWomen') {
+                        const womenSection = document.querySelector(`.women-section[data-year="${selectedYear}"]`);
+                        if (womenSection) {
+                            womenSection.style.display = 'block';
+                            visibleSections++;
+                        }
+                    }
+                    
+                    // Show no data message if no sections are visible
+                    if (visibleSections === 0) {
+                        noDataMessage.style.display = 'block';
                     }
                 }
             }
@@ -365,12 +384,6 @@
                     section.style.display = 'none';
                 });
             }
-            
-            // Initially hide all sections and show no selection message
-            hideAllSections();
-            noSelection.style.display = 'block';
-            associationTabs.style.display = 'none';
-            associationTabs.style.opacity = '0';
         });
     </script>
 

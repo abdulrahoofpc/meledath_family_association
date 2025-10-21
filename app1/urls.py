@@ -8,8 +8,8 @@ urlpatterns = [
     path("history/", views.History, name="history"),
 
     # ----- Team -----
-    path("team/", views.team_list, name="team"),
-    path("team/<slug:slug>/", views.team_detail, name="team_detail"),
+    path("our-team/", views.team_list, name="team"),
+    path("our-team/<slug:slug>/", views.team_detail, name="team_detail"),
 
     # ----- Authentication -----
     path("register/", views.register, name="register"),

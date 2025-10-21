@@ -70,8 +70,11 @@ class BaseFamilyMember(MPTTModel):
     )
     spouses = models.ManyToManyField('self', symmetrical=True, blank=True)
 
+    # Add birth order field for proper child ordering
+    birth_order = models.PositiveIntegerField(default=0, help_text="Order of birth (1 for firstborn, etc.)")
+
     class MPTTMeta:
-        order_insertion_by = ['first_name']
+        order_insertion_by = ['birth_order', 'first_name']
 
     class Meta:
         abstract = True
@@ -88,6 +91,12 @@ class BaseFamilyMember(MPTTModel):
                 membership_category=self.membership_category
             ).count() + 1
             self.membership_number = f"{prefix}{str(count).zfill(4)}"
+        
+        # Auto-set birth order if not set and has parent
+        if self.parent and self.birth_order == 0:
+            siblings_count = self.parent.children.count()
+            self.birth_order = siblings_count + 1
+            
         super().save(*args, **kwargs)
 
 

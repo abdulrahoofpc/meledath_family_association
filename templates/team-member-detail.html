@@ -4,242 +4,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ member.name }} - Team Member</title>
+    <title>{{ member.name }} - Team Member | Meledath Family</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-    
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
         }
         
-        /* Header Styles */
         .page-header {
-            background: linear-gradient(135deg, #00B4DB, #0083B0);
+            background: linear-gradient(135deg, #1a6a96, #2699D2);
             color: white;
-            padding: 80px 0 60px;
-            text-align: center;
-            margin-bottom: 50px;
+            padding: 60px 0 30px;
         }
         
         .page-title {
-            font-size: 42px;
+            font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
         }
         
-        .breadcrumb {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            font-size: 16px;
-        }
-        
-        .breadcrumb li {
-            margin: 0 10px;
-        }
-        
-        .breadcrumb a {
-            color: rgba(255, 255, 255, 0.8);
+        .breadcrumb-item a {
+            color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
-            transition: all 0.3s;
         }
         
-        .breadcrumb a:hover {
-            color: white;
+        .breadcrumb-item.active {
+            color: rgba(255, 255, 255, 0.7);
         }
         
-        .breadcrumb .separator {
-            margin: 0 5px;
-        }
-        
-        /* Member Details Section */
         .member-section {
-            padding: 80px 0;
-            animation: fadeIn 0.8s ease-in-out;
+            padding: 50px 0;
         }
         
-        .member-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 40px;
+        .member-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
         
         .member-image {
-            flex: 1;
-            min-width: 300px;
+            height: 100%;
+            min-height: 400px;
         }
         
         .member-image img {
             width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            border: 5px solid white;
-        }
-        
-        .member-image img:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            height: 100%;
+            object-fit: cover;
         }
         
         .member-info {
-            flex: 2;
-            min-width: 300px;
+            padding: 30px;
         }
         
         .member-name {
-            font-size: 36px;
+            font-size: 2rem;
             font-weight: 700;
-            color: #333;
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 15px;
-        }
-        
-        .member-name:after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(135deg, #00B4DB, #0083B0);
+            color: #2C3E50;
+            margin-bottom: 0.5rem;
         }
         
         .member-position {
-            font-size: 20px;
-            color: #00B4DB;
-            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: #2699D2;
             font-weight: 600;
+            margin-bottom: 1.5rem;
         }
         
         .member-bio {
-            font-size: 16px;
-            line-height: 1.8;
-            color: #666;
-            margin-bottom: 30px;
+            color: #6C757D;
+            margin-bottom: 2rem;
         }
         
-        /* Social Links */
-        .social-links {
+        .member-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .detail-item {
             display: flex;
-            gap: 15px;
-            margin-top: 30px;
+            align-items: center;
+            margin-bottom: 15px;
         }
         
-        .social-links a {
+        .detail-icon {
+            width: 40px;
+            height: 40px;
+            background: #2699D2;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #00B4DB, #0083B0);
             color: white;
-            font-size: 16px;
-            transition: all 0.3s;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #6C757D;
+            font-size: 0.9rem;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+            color: #2C3E50;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .social-link {
+            width: 45px;
+            height: 45px;
+            background: #2699D2;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
             text-decoration: none;
+            transition: all 0.3s ease;
         }
         
-        .social-links a:hover {
+        .social-link:hover {
             transform: translateY(-3px);
-            {% comment %} box-shadow: 0 5px 15px rgba(110, 72, 170, 0.4); {% endcomment %}
+            color: white;
         }
         
-        /* Footer */
-        .footer {
-             background: linear-gradient(135deg, #00B4DB, #0083B0);
+        .social-link.facebook { background: #0077B5; }
+        .social-link.twitter { background: #0077B5; }
+        .social-link.linkedin { background: #0077B5; }
+        .social-link.instagram { background: #0077B5; }
+        .social-link.email { background: #0077B5; }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn-primary-custom {
+            background: #2699D2;
             color: white;
-            padding: 40px 0;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary-custom:hover {
+            background: #1a6a96;
+            color: white;
+        }
+        
+        .btn-outline-custom {
+            background: transparent;
+            color: #2699D2;
+            padding: 12px 25px;
+            border: 2px solid #2699D2;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-custom:hover {
+            background: #2699D2;
+            color: white;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #1a6a96, #2699D2);
+            color: white;
+            padding: 30px 0;
             text-align: center;
         }
         
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* Responsive Styles */
         @media (max-width: 768px) {
             .page-title {
-                font-size: 32px;
+                font-size: 2rem;
             }
             
             .member-name {
-                font-size: 28px;
+                font-size: 1.7rem;
             }
             
-            .breadcrumb {
-                flex-wrap: wrap;
-            }
-            
-            .breadcrumb li {
-                margin: 5px 10px;
+            .action-buttons {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Header Section -->
     <header class="page-header">
         <div class="container">
-            <h1 class="page-title">{{ member.name }}</h1>
-            <ul class="breadcrumb">
-                <li><a href="/">Home</a></li>
-                <li class="separator"><i class="fas fa-chevron-right"></i></li>
-                <li><a href="{% url 'team' %}">Our Team</a></li>
-                <li class="separator"><i class="fas fa-chevron-right"></i></li>
-                <li>{{ member.name }}</li>
-            </ul>
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8">
+                    <h1 class="page-title">{{ member.name }}</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center">
+                            <li class="breadcrumb-item"><a href="/"><i class="fas fa-home me-2"></i>Home</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'team' %}"><i class="fas fa-users me-2"></i>Our Team</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><i class="fas fa-user me-2"></i>{{ member.name }}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
         </div>
     </header>
 
+    <!-- Main Content Section -->
     <section class="member-section">
         <div class="container">
-            <div class="member-container">
-                <div class="member-image">
-                    <img src="{{ member.image.url }}" class="img-fluid rounded" alt="{{ member.name }}">
-                </div>
-                <div class="member-info">
-                    <h2 class="member-name">{{ member.name }}</h2>
-                    <p class="member-position"><strong>Position:</strong> {{ member.position }}</p>
-                    <p class="member-bio">{{ member.bio }}</p>
+            <div class="row justify-content-center">
+                <div class="col-xl-10">
+                    <div class="member-card">
+                        <div class="row g-0">
+                            <!-- Member Image Column -->
+                            <div class="col-lg-5">
+                                <div class="member-image">
+                                    {% if member.image %}
+                                    <img src="{{ member.image.url }}" alt="{{ member.name }}"
+                                         onerror="this.src='{% static 'images/default-avatar.jpg' %}'">
+                                    {% else %}
+                                    <img src="{% static 'images/default-avatar.jpg' %}" alt="{{ member.name }}">
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Member Info Column -->
+                            <div class="col-lg-7">
+                                <div class="member-info">
+                                    <h2 class="member-name">{{ member.name }}</h2>
+                                    <div class="member-position">{{ member.position }}</div>
+                                    
+                                    <!-- Biography -->
+                                    {% if member.bio %}
+                                    <div class="member-bio">{{ member.bio|linebreaks }}</div>
+                                    {% else %}
+                                    <div class="member-bio text-muted">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        No biography available for this member.
+                                    </div>
+                                    {% endif %}
 
-                    <div class="social-links">
-                        {% if member.facebook %}
-                            <a href="{{ member.facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        {% endif %}
-                        {% if member.twitter %}
-                            <a href="{{ member.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
-                        {% endif %}
-                        {% if member.linkedin %}
-                            <a href="{{ member.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        {% endif %}
-                        {% if member.instagram %}
-                            <a href="{{ member.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
-                        {% endif %}
-                        {% if member.github %}
-                            <a href="{{ member.github }}" target="_blank"><i class="fab fa-github"></i></a>
-                        {% endif %}
+                                    <!-- Member Details -->
+                                    <div class="member-details">
+                                        {% if member.year %}
+                                        <div class="detail-item">
+                                            <div class="detail-icon">
+                                                <i class="fas fa-calendar-alt"></i>
+                                            </div>
+                                            <div class="detail-content">
+                                                <div class="detail-label">Term Period</div>
+                                                <div class="detail-value">{{ member.year }}</div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        {% if member.email %}
+                                        <div class="detail-item">
+                                            <div class="detail-icon">
+                                                <i class="fas fa-envelope"></i>
+                                            </div>
+                                            <div class="detail-content">
+                                                <div class="detail-label">Email Address</div>
+                                                <div class="detail-value">
+                                                    <a href="mailto:{{ member.email }}">{{ member.email }}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        {% if member.phone %}
+                                        <div class="detail-item">
+                                            <div class="detail-icon">
+                                                <i class="fas fa-phone"></i>
+                                            </div>
+                                            <div class="detail-content">
+                                                <div class="detail-label">Phone Number</div>
+                                                <div class="detail-value">
+                                                    <a href="tel:{{ member.phone }}">{{ member.phone }}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        <div class="detail-item">
+                                            <div class="detail-icon">
+                                                <i class="fas fa-users"></i>
+                                            </div>
+                                            <div class="detail-content">
+                                                <div class="detail-label">Association Type</div>
+                                                <div class="detail-value">
+                                                    {% if member.is_women_association %}
+                                                    <span class="badge bg-primary">Women's Association</span>
+                                                    {% else %}
+                                                    <span class="badge bg-info">General Association</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Social Links -->
+                                    <div class="social-section">
+                                        <h5 class="mb-3">Connect With Me</h5>
+                                        <div class="social-links">
+                                            {% if member.facebook %}
+                                            <a href="{{ member.facebook }}" target="_blank" rel="noopener noreferrer" class="social-link facebook" aria-label="Facebook">
+                                                <i class="fab fa-facebook-f"></i>
+                                            </a>
+                                            {% endif %}
+                                            
+                                            {% if member.twitter %}
+                                            <a href="{{ member.twitter }}" target="_blank" rel="noopener noreferrer" class="social-link twitter" aria-label="Twitter">
+                                                <i class="fab fa-twitter"></i>
+                                            </a>
+                                            {% endif %}
+                                            
+                                            {% if member.linkedin %}
+                                            <a href="{{ member.linkedin }}" target="_blank" rel="noopener noreferrer" class="social-link linkedin" aria-label="LinkedIn">
+                                                <i class="fab fa-linkedin-in"></i>
+                                            </a>
+                                            {% endif %}
+                                            
+                                            {% if member.instagram %}
+                                            <a href="{{ member.instagram }}" target="_blank" rel="noopener noreferrer" class="social-link instagram" aria-label="Instagram">
+                                                <i class="fab fa-instagram"></i>
+                                            </a>
+                                            {% endif %}
+                                            
+                                            {% if member.email %}
+                                            <a href="mailto:{{ member.email }}" class="social-link email" aria-label="Email">
+                                                <i class="fas fa-envelope"></i>
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="action-buttons">
+                                        <a href="{% url 'team' %}" class="btn-primary-custom">
+                                            <i class="fas fa-arrow-left me-2"></i> Back to Team
+                                        </a>
+                                        {% if member.email %}
+                                        <a href="mailto:{{ member.email }}" class="btn-outline-custom">
+                                            <i class="fas fa-paper-plane me-2"></i> Send Message
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; {% now "Y" %} Meledath Family.</p>
+            <div class="row">
+                <div class="col-12">
+                    <p class="mb-2">&copy; {% now "Y" %} Meledath Family. All rights reserved.</p>
+                    {% comment %} <p class="mb-0 text-muted" style="color:#ffff;">Building stronger family connections</p> {% endcomment %}
+                </div>
+            </div>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

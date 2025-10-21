@@ -53,13 +53,14 @@ admin.site.register(Member, MPTTModelAdmin)
 
 
 # Profiles
+
+
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'full_name', 'phone_number', 'pin_code')
+    list_display = ('user', 'full_name', 'phone_number', 'pin_code', 'is_approved')
     search_fields = ('user__username', 'full_name', 'phone_number')
-    list_filter = ('pin_code',)
+    list_filter = ('is_approved', 'pin_code')
     ordering = ('user__username',)
-
 
 # Gallery
 @admin.register(Gallery)

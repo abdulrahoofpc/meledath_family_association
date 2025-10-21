@@ -1,6 +1,14 @@
 <li>
     <div class="member-container">
         <div class="member-couple">
+            <!-- Spouse connection line with love symbol -->
+            {% if member.spouses.all %}
+                <div class="spouse-connection"></div>
+                <div class="love-symbol">
+                    <i class="fas fa-heart"></i>
+                </div>
+            {% endif %}
+            
             <!-- Main member -->
             <div class="member-box 
                         {% if member.gender == 'M' %}male{% elif member.gender == 'F' %}female{% endif %}"
@@ -19,6 +27,11 @@
                 </div>
                 <div class="member-info">
                     <div class="member-name">{{ member.first_name }} {{ member.last_name }}</div>
+                    {% if member.birth_order > 0 %}
+                        <div class="member-birth-order" style="font-size: 0.7rem; color: #ccc; margin-bottom: 3px;">
+                            #{{ member.birth_order }}
+                        </div>
+                    {% endif %}
                     {% if member.membership_category %}
                         <div class="member-category 
                                     {% if member.membership_category == 'LM' %}category-lm
@@ -27,7 +40,7 @@
                                     {% endif %}">
                             {% if member.membership_category == 'LM' %}<i class="fas fa-star"></i> Life Member
                             {% elif member.membership_category == 'PM' %}<i class="fas fa-check"></i> Paid Member
-                            {% elif member.membership_category == 'NM' %}<i class="fas fa-times"></i> Non Member
+                            {% elif member.membership_category == 'NM' %} <i class="fas fa-check"></i> Member
                             {% endif %}
                         </div>
                     {% endif %}
@@ -57,7 +70,7 @@
                                             {% endif %}">
                                     {% if spouse.membership_category == 'LM' %}<i class="fas fa-star"></i> Life Member
                                     {% elif spouse.membership_category == 'PM' %}<i class="fas fa-check"></i> Paid Member
-                                    {% elif spouse.membership_category == 'NM' %}<i class="fas fa-times"></i> Non Member
+                                    {% elif spouse.membership_category == 'NM' %}<i class="fas fa-check"></i>Member
                                     {% endif %}
                                 </div>
                             {% endif %}
@@ -123,6 +136,9 @@
             <div class="popup-details">
                 <p><strong>Name:</strong> <span>{{ member.first_name }} {{ member.last_name }}</span></p>
                 <p><strong>Gender:</strong> <span>{% if member.gender == 'M' %}Male{% elif member.gender == 'F' %}Female{% else %}N/A{% endif %}</span></p>
+                {% if member.birth_order > 0 %}
+                    <p><strong>Birth Order:</strong> <span>{{ member.birth_order }}</span></p>
+                {% endif %}
                 <p><strong>Membership:</strong> 
                     <span>
                         {% if member.membership_category == 'LM' %}Life Member
@@ -157,7 +173,7 @@
         {% if member.get_children %}
             <ul class="children-list">
                 {% for child in member.get_children %}
-                    {% include 'family1memb.html' with member=child %}
+                    {% include 'family2memb.html' with member=child %}
                 {% endfor %}
             </ul>
         {% endif %}

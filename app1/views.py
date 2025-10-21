@@ -14,33 +14,34 @@ def History(request):
     members = LifeMember.objects.all().order_by('membership_no')
     return render(request, 'our-history.html', {'members': members})
 
-# Get all life members from DB--------------
-def team_list(request):
-    # General Members (not women association)
-    general_qs = TeamMember.objects.filter(is_women_association=False).order_by("year", "name")
+# ------our team--------------------------------------
 
+def team_list(request):
+    # Group general members by year
+    general_qs = TeamMember.objects.filter(is_women_association=False).order_by("year", "name")
     general_by_year = defaultdict(list)
     for member in general_qs:
         general_by_year[member.year].append(member)
 
-    # Women Association Members
+    # Group women association members by year
     women_qs = TeamMember.objects.filter(is_women_association=True).order_by("year", "name")
-
     women_by_year = defaultdict(list)
     for member in women_qs:
         women_by_year[member.year].append(member)
 
-    return render(request, "our-team.html", {
+    context = {
         "general_by_year": dict(general_by_year),
         "women_by_year": dict(women_by_year),
-    })
+    }
+    return render(request, "our-team.html", context)
 
 
 def team_detail(request, slug):
     member = get_object_or_404(TeamMember, slug=slug)
     return render(request, "team-member-detail.html", {"member": member})
 
-#family_tree-----------------------
+
+#family_tree------------------------------------------
 
 def family2(request):
     roots = Member.objects.filter(parent=None)
@@ -93,36 +94,40 @@ def register(request):
         password2    = request.POST.get("password2")
         phone_number = request.POST.get("phone")
 
-        # 1️⃣ password match check
+        # Password match check
         if password1 != password2:
             messages.error(request, "Passwords do not match.")
             return redirect("register")
 
-        # 2️⃣ user already exists check
+        # User already exists check
         if User.objects.filter(username=email).exists():
             messages.error(request, "User already exists.")
             return redirect("register")
 
-        # 3️⃣ create user & profile
         try:
+            # Create user
             user = User.objects.create_user(
                 username=email,
                 email=email,
                 password=password1,
                 first_name=first_name,
             )
+
+            # Create Profile (not approved yet)
             Profile.objects.create(
                 user=user,
                 full_name=first_name,
                 phone_number=phone_number,
+                is_approved=False
             )
-            messages.success(request, f"Account created for {email}!")
+
+            messages.success(request, f"Account created for {email}! Please wait for admin approval.")
             return redirect("login")
+
         except Exception as e:
             messages.error(request, f"Error: {str(e)}")
             return redirect("register")
 
-    # GET request → render the shared form
     return render(request, "forms.html")
 
 
@@ -134,13 +139,22 @@ def custom_login(request):
 
         user = authenticate(username=username, password=password)
         if user:
+            try:
+                profile = Profile.objects.get(user=user)
+                if not profile.is_approved:
+                    messages.error(request, "Your account is not approved yet. Please wait for admin approval.")
+                    return redirect("login")
+            except Profile.DoesNotExist:
+                messages.error(request, "Profile not found. Contact admin.")
+                return redirect("login")
+
             login(request, user)
-            messages.success(request, f"Welcome back, {username}!")
+            messages.success(request, f"Welcome back, {user.first_name}!")
             return redirect("family_pillars")
+
         messages.error(request, "Invalid username or password.")
         return redirect("login")
 
-    # GET request
     return render(request, "forms.html")
 
 
@@ -149,7 +163,6 @@ def custom_logout(request):
     logout(request)
     messages.success(request, "You have been logged out successfully.")
     return redirect("login")
-# -----------------------------------------------------------------------------------------------------#
 
 def discussion_view(request):
     topic = Topic.objects.first()

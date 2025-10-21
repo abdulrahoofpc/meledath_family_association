@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from mptt.models import MPTTModel, TreeForeignKey
 from django.db import models
 
+
 # LIFE MEMBER ---------------------------
 
 class LifeMember(models.Model):
@@ -67,26 +68,18 @@ class TeamMember(models.Model):
     bio = models.TextField(blank=True)
     slug = models.SlugField(unique=True)
 
-    # Social media links
     facebook = models.URLField(blank=True)
     twitter = models.URLField(blank=True)
     linkedin = models.URLField(blank=True)
     instagram = models.URLField(blank=True)
 
-    # Flags
     is_women_association = models.BooleanField(default=False)
     gender = models.CharField(
         max_length=10,
         choices=(('Male', 'Male'), ('Female', 'Female')),
         blank=True
     )
-
-    # NEW field for session/year
-    year = models.CharField(
-        max_length=20,
-        blank=True,
-        help_text="Example: '2011 - 2012'"
-    )
+    year = models.CharField(max_length=20, blank=True, help_text="Example: '2011 - 2012'")
 
     def __str__(self):
         return f"{self.name} ({self.year})"
@@ -174,12 +167,15 @@ class Member(MPTTModel):
 #         return f"{self.first_name} {self.last_name}"
 
 
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=20)
     pin_code = models.CharField(max_length=10, blank=True)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    is_approved = models.BooleanField(default=False)  # ✅ New field
 
     def __str__(self):
         return self.full_name
